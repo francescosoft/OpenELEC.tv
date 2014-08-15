@@ -49,14 +49,26 @@ if [ ! -f "$ADDON_CACHE_DIR" ]; then
   mkdir -p $ADDON_CACHE_DIR
 fi
 
-VDR_ARG="-g /tmp --no-kbd"
+VDR_ARG="-g /tmp"
 if [ "$DEBUG" = "yes" ]; then
   VDR_ARG="$VDR_ARG --log=3"
 else
-  VDR_ARG="$VDR_ARG --log=1"
+  VDR_ARG="$VDR_ARG --log=3"
+fi
+# should vdr start standalone ?
+ps cax | grep xbmc.bin > /dev/null
+if [ -f /storage/.xbmc/addons/service.multimedia.vdr-addon/bin/start.vdr ]; then
+  STARTVDR=1
+  if [ $? -eq 0 ]; then
+    systemctl stop xbmc
+  fi
+else
+  if [ ! $? -eq 0 ]; then
+    systemctl start xbmc
+  fi
 fi
 
-SVDRP_PORT=0
+SVDRP_PORT=6419
 
 # epgsearch needs svdrp
 if [ "$ENABLE_EPGSEARCH" == "true" ] ; then
@@ -114,6 +126,14 @@ fi
 if [ "$ENABLE_SATIP" == "true" ] ; then
   VDR_ARG="$VDR_ARG -P satip"
 fi
+if [ "$ENABLE_VDR_FRONTEND" == "true" ] && [ "$STARTVDR" -eq 1 ] ; then
+  VDR_ARG="$VDR_ARG -P rpihddevice"
+  if [ "$ENABLE_LIBCEC" == "true" ] ; then
+  VDR_ARG="$VDR_ARG -P 'remote -i /dev/input/libcec-daemon'"
+  sh /storage/.xbmc/addons/service.multimedia.vdr-addon/bin/start-libcec.sh
+  fi
+fi
+
 if [ "$ENABLE_XMLTV2VDR" == "true" ] ; then
   VDR_ARG="$VDR_ARG -P 'xmltv2vdr --epgfile=$ADDON_CACHE_DIR/epg.db'"
   # xmltv2vdr needs /var/run/vdr

@@ -30,4 +30,6 @@
         <string id="1056">Enable external recdmd</string>
         <string id="1057">External recdmd path</string>
         <string id="1058">- number of devices</string>
+    <string id="2001">Enable vdr standalone RPI</string>
+	<string id="2002">- use CECRemote</string>
 </strings>
