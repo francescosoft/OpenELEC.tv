@@ -19,7 +19,7 @@
     ################################################################################
      
     PKG_NAME="vdr-plugin-rpihddevice"
-    PKG_VERSION="405aa1b"
+    PKG_VERSION="c35a921"
     PKG_REV="1"
     PKG_ARCH="any"
     PKG_LICENSE="GPL"
