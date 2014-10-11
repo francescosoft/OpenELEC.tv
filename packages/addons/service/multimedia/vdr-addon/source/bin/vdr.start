@@ -139,6 +139,7 @@ if [ "$ENABLE_VDR_FRONTEND" == "true" ] && [ "$STARTVDR" -eq 1 ] ; then
     VDR_ARG="$VDR_ARG -P svdrpservice"
     VDR_ARG="$VDR_ARG -P epgsync"
     VDR_ARG="$VDR_ARG -P remoteosd"
+    VDR_ARG="$VDR_ARG -P remotetimers"
   fi
 fi
 
