@@ -18,14 +18,14 @@
     #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
     ################################################################################
      
-    PKG_NAME="vdr-plugin-rpihddevice"
-    PKG_VERSION="809daf6"
+    PKG_NAME="vdr-dynamite"
+    PKG_VERSION="0.1.5"
     PKG_REV="1"
     PKG_ARCH="any"
     PKG_LICENSE="GPL"
     PKG_SITE=""
     PKG_URL="https://dl.dropboxusercontent.com/u/87694205/$PKG_NAME-$PKG_VERSION.tar.xz"
-    PKG_DEPENDS_TARGET="toolchain bcm2835-driver vdr ffmpeg"
+    PKG_DEPENDS_TARGET="toolchain vdr systemd"
     PKG_PRIORITY="optional"
     PKG_SECTION="multimedia"
     PKG_SHORTDESC=""
@@ -40,15 +40,11 @@
       export CXXFLAGS="$CXXFLAGS -fPIC"
       export LDFLAGS="$LDFLAGS -fPIC"
        
-      #export VCINCDIR="-I$SYSROOT_PREFIX/usr/include -I$SYSROOT_PREFIX/usr/include/interface/vcos/pthreads -I$SYSROOT_PREFIX/usr/include/interface/vmcs_host/linux"
-      #export VCLIBDIR="-L$ROOT/$BUILD/.install_pkg/usr/lib"
       VDR_DIR=$(get_build_dir vdr)
-      export INCLUDES="-I$VDR_DIR/include -I$SYSROOT_PREFIX/usr/include -I$SYSROOT_PREFIX/usr/include/interface/vcos/pthreads -I$SYSROOT_PREFIX/usr/include/interface/vmcs_host/linux"
-     
-      BCM2835_DRIVER_DIR=$(get_build_dir bcm2835-driver)
-      export LDLIBS="-L$BCM2835_DRIVER_DIR/.install_pkg/usr/lib"
-     
+      export INCLUDES="-I$VDR_DIR/include -I$SYSROOT_PREFIX/usr/include"      
+      sed -i '/$(CXX) $(CXXFLAGS) $(LDFLAGS) -shared $(OBJS) -o $@/a \\t @cp --remove-destination $@ $(LIBDIR)/$@.$(APIVERSION)' Makefile     
       sed -i 's|^PKGCFG = |#PKGCFG = |' Makefile
+
     }
      
     make_target() {
